@@ -26,8 +26,11 @@ const Dashboard: React.FC = () => {
             alt="João Gabriel"
           />
           <div>
-            <strong>Slidejs</strong>
-            <p>Reproducing Origamid's JS Slide while studying</p>
+            <strong>Ecoleta</strong>
+            <p>
+              Ecoleta - to connect Points that collects recyclable or
+              non-recyclable waste to public
+            </p>
           </div>
           <RightArrowIcon size={20} />
         </a>
