@@ -1,11 +1,39 @@
-import React from 'react';
+import React, { useState, FormEvent } from 'react';
 import { FiChevronRight as RightArrowIcon } from 'react-icons/fi';
+import api from '../../services/api';
 
 import logoIcon from '../../assets/logo.svg';
 
 import { Title, Form, Repositories } from './styles';
 
+interface Repository {
+  full_name: string;
+  description: string;
+  owner: {
+    login: string;
+    avatar_url: string;
+  }
+}
+
 const Dashboard: React.FC = () => {
+  const [newRepository, setNewRepository] = useState('');
+  const [repositories, setRepositories] = useState<Repository[]>([]);
+
+  async function handleAddRepository(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+
+    // requesting github api info
+    const response = await api.get<Repository>(`repos/${newRepository}`);
+    const repository = response.data;
+
+    // updating UI with this info
+    setRepositories([...repositories, repository]);
+
+    // cleaning input
+    setNewRepository('');
+
+  }
+
   return (
     <>
       <img src={logoIcon} alt="GitHub Explorer Logo" />
@@ -14,26 +42,31 @@ const Dashboard: React.FC = () => {
         <span> Github</span>
       </Title>
 
-      <Form>
-        <input placeholder="Digite o nome do repositório" />
+      <Form onSubmit={handleAddRepository}>
+        <input
+          placeholder="Digite o nome do repositório (usuário/repositório)"
+          value={newRepository}
+          onChange={e => setNewRepository(e.target.value)}
+        />
         <button type="submit">Pesquisar</button>
       </Form>
 
       <Repositories>
-        <a href="any">
-          <img
-            src="https://avatars3.githubusercontent.com/u/53549655?s=460&u=ed74bf8cfd55909c6f4eda92ab972e7708ffd4f9&v=4"
-            alt="João Gabriel"
-          />
-          <div>
-            <strong>Ecoleta</strong>
-            <p>
-              Ecoleta - to connect Points that collects recyclable or
-              non-recyclable waste to public
-            </p>
-          </div>
-          <RightArrowIcon size={20} />
-        </a>
+        {repositories.map((repository: Repository) => (
+          <a key={repository.full_name} href={`https://github.com/${repository.full_name}`}>
+            <img
+              src={repository.owner.avatar_url}
+              alt={repository.owner.login}
+            />
+            <div>
+            <strong>{repository.full_name}</strong>
+              <p>
+                {repository.description}
+              </p>
+            </div>
+            <RightArrowIcon size={20} />
+          </a>
+        ))}
       </Repositories>
     </>
   );

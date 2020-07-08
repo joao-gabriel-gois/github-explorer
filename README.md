@@ -4,9 +4,8 @@
 
 **Two simple screens**:
 
-* First one is to search by username
+* **First one is to search by username**
+  ![GitHub Explorer](https://user-images.githubusercontent.com/53549655/86886118-c0479700-c0cc-11ea-9c4e-32dd40734899.png)
+* **Second one is to see details about this user profile in github**
 
-* Second one is to see details about this user profile in github
 
-  **Home:**
-      ![GitHub Explorer](https://user-images.githubusercontent.com/53549655/86886118-c0479700-c0cc-11ea-9c4e-32dd40734899.png)
