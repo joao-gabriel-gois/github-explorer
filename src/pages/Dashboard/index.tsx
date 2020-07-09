@@ -4,7 +4,7 @@ import api from '../../services/api';
 
 import logoIcon from '../../assets/logo.svg';
 
-import { Title, Form, Repositories } from './styles';
+import { Title, Form, Repositories, Error } from './styles';
 
 interface Repository {
   full_name: string;
@@ -18,20 +18,30 @@ interface Repository {
 const Dashboard: React.FC = () => {
   const [newRepository, setNewRepository] = useState('');
   const [repositories, setRepositories] = useState<Repository[]>([]);
+  const [ inputError, setInputError ] = useState('');
 
   async function handleAddRepository(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
 
-    // requesting github api info
-    const response = await api.get<Repository>(`repos/${newRepository}`);
-    const repository = response.data;
+    if (!newRepository) {
+      setInputError('Digite o repositório no formato autor/nome-do-repositório');
+      return;
+    }
 
-    // updating UI with this info
-    setRepositories([...repositories, repository]);
+    try {
+      // requesting github api info
+      const response = await api.get<Repository>(`repos/${newRepository}`);
+      const repository = response.data;
 
-    // cleaning input
-    setNewRepository('');
+      // updating UI with this info
+      setRepositories([...repositories, repository]);
 
+      // cleaning input and input error
+      setNewRepository('');
+      setInputError('');
+    } catch (error) {
+      setInputError('Não foi possível encontrar essa combinação autor/repositório');
+    }
   }
 
   return (
@@ -42,7 +52,7 @@ const Dashboard: React.FC = () => {
         <span> Github</span>
       </Title>
 
-      <Form onSubmit={handleAddRepository}>
+      <Form hasError={!!inputError} onSubmit={handleAddRepository}>
         <input
           placeholder="Digite o nome do repositório (usuário/repositório)"
           value={newRepository}
@@ -50,6 +60,8 @@ const Dashboard: React.FC = () => {
         />
         <button type="submit">Pesquisar</button>
       </Form>
+
+      { inputError && <Error>{inputError}</Error>}
 
       <Repositories>
         {repositories.map((repository: Repository) => (
