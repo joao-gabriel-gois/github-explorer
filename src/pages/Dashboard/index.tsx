@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { FiChevronRight as RightArrowIcon } from 'react-icons/fi';
 import api from '../../services/api';
 
@@ -17,8 +17,24 @@ interface Repository {
 
 const Dashboard: React.FC = () => {
   const [newRepository, setNewRepository] = useState('');
-  const [repositories, setRepositories] = useState<Repository[]>([]);
-  const [ inputError, setInputError ] = useState('');
+  const [inputError, setInputError] = useState('');
+  const [repositories, setRepositories] = useState<Repository[]>(() => {
+    const storagedRepositories = localStorage.getItem('@GithubExplorer:repositories');
+
+    if (storagedRepositories) {
+      return JSON.parse(storagedRepositories);
+    } else {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    // bellow we are setting the key with the app name
+    // cause localstorage is shared among aplications in
+    // the same domain. As we use localhost multiple times
+    // this is the better way to not make a mess in localStorage
+    localStorage.setItem('@GithubExplorer:repositories', JSON.stringify(repositories))
+  }, [repositories])
 
   async function handleAddRepository(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
