@@ -1,5 +1,7 @@
 import React, { useState, useEffect, FormEvent } from 'react';
+import { Link } from 'react-router-dom';
 import { FiChevronRight as RightArrowIcon } from 'react-icons/fi';
+
 import api from '../../services/api';
 
 import logoIcon from '../../assets/logo.svg';
@@ -81,7 +83,7 @@ const Dashboard: React.FC = () => {
 
       <Repositories>
         {repositories.map((repository: Repository) => (
-          <a key={repository.full_name} href={`https://github.com/${repository.full_name}`}>
+          <Link key={repository.full_name} to={`/repository/${repository.full_name}`}>
             <img
               src={repository.owner.avatar_url}
               alt={repository.owner.login}
@@ -93,7 +95,7 @@ const Dashboard: React.FC = () => {
               </p>
             </div>
             <RightArrowIcon size={20} />
-          </a>
+          </Link>
         ))}
       </Repositories>
     </>

@@ -35,12 +35,13 @@ export const Form = styled.form<FormProps>`
     border: 0;
     border-radius: 5px 0 0 5px;
     color: #3a3a3a;
-    border: 2px #fff;
+    border: 2px solid #fff;
     border-right: 0;
+    transition: border linear .24s;
 
     ${({ hasError }) => hasError &&
      css`
-        border-color: #c73A30;
+        border-color: #c53030;
     `}
 
     &::placeholder {
@@ -66,7 +67,7 @@ export const Form = styled.form<FormProps>`
 
 export const Error = styled.span`
   display: block;
-  color: #c73A30;
+  color: #c53030;
   margin-top: 8px;
 `;
 
